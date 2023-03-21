@@ -8,6 +8,9 @@ import {
   TextInput,
   Platform,
   Button,
+  Keyboard,
+  TouchableWithoutFeedback,
+  KeyboardAvoidingView,
 } from "react-native";
 import { Camera } from "expo-camera";
 import * as Location from "expo-location";
@@ -22,7 +25,10 @@ const CreatePostsScreen = ({ navigation }) => {
   const [type, setType] = useState(Camera.Constants.Type.back);
   const [formValues, setFormValues] = useState({ title: "", location: "" });
   const [isFormValid, setIsFormValid] = useState(false);
-  console.log(isFormValid);
+  const [isFocus, setIsFocus] = useState({
+    title: false,
+    location: false,
+  });
 
   const handleCameraReady = () => {
     setIsCameraReady(true);
@@ -32,10 +38,10 @@ const CreatePostsScreen = ({ navigation }) => {
     if (camera && isCameraReady) {
       try {
         const photo = await camera.takePictureAsync();
-        console.log("photo", photo.uri);
+        // console.log("photo", photo.uri);
         const location = await Location.getCurrentPositionAsync({});
-        console.log("latitude", location.coords.latitude);
-        console.log("longitude", location.coords.longitude);
+        // console.log("latitude", location.coords.latitude);
+        // console.log("longitude", location.coords.longitude);
         setLocation(location);
         setPhoto(photo.uri);
       } catch (error) {
@@ -47,7 +53,7 @@ const CreatePostsScreen = ({ navigation }) => {
   };
 
   useEffect(() => {
-    if (formValues.title && formValues.location) {
+    if (formValues.title && formValues.location && photo) {
       setIsFormValid(true);
     } else {
       setIsFormValid(false);
@@ -56,7 +62,13 @@ const CreatePostsScreen = ({ navigation }) => {
 
   const sendPhoto = () => {
     console.log("navigation", navigation);
-    navigation.navigate("DefaultScreen", { photo });
+    navigation.navigate("DefaultScreen", {
+      title: formValues.title,
+      location: formValues.location,
+      photo: photo,
+    });
+    setFormValues({ title: "", location: "" });
+    setPhoto("");
   };
 
   useEffect(() => {
@@ -88,74 +100,106 @@ const CreatePostsScreen = ({ navigation }) => {
   }, []);
 
   return (
-    <View style={styles.container}>
-      <Camera
-        type={type}
-        style={styles.camera}
-        ref={(ref) => setCamera(ref)}
-        onCameraReady={handleCameraReady}
-      >
-        {photo && (
-          <View style={styles.takePhotoContainer}>
-            <Image
-              source={{ uri: photo }}
-              style={{ height: "100%", width: "100%" }}
-            />
-          </View>
-        )}
-        <TouchableOpacity style={styles.cameraBtn} onPress={takePhoto}>
-          <FontAwesome name="camera" size={24} color="#BDBDBD" />
-        </TouchableOpacity>
-      </Camera>
-      {!photo ? (
-        <Text style={styles.text}>Загрузите фото</Text>
-      ) : (
-        <Text style={styles.text}>Редактировать фото</Text>
-      )}
-      <View>
-        <TextInput
-          style={styles.input}
-          placeholder="Название..."
-          value={formValues.title}
-          onChangeText={(value) =>
-            setFormValues({ ...formValues, title: value })
-          }
-        />
-        <View style={styles.inputMapWrapper}>
-          <Feather
-            name="map-pin"
-            size={18}
-            color="#BDBDBD"
-            style={styles.mapIcon}
-          />
-          <TextInput
-            style={styles.inputMap}
-            placeholder="Местность..."
-            value={formValues.location}
-            onChangeText={(value) =>
-              setFormValues({ ...formValues, location: value })
-            }
-          />
-        </View>
-        <TouchableOpacity
-          style={[styles.button, !isFormValid && styles.disabledButton]}
-          onPress={() => {
-            if (isFormValid) {
-              sendPhoto();
-            }
-          }}
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <View style={styles.container}>
+        <Camera
+          type={type}
+          style={styles.camera}
+          ref={(ref) => setCamera(ref)}
+          onCameraReady={handleCameraReady}
         >
-          <Text
+          {photo && (
+            <View style={styles.takePhotoContainer}>
+              <Image
+                source={{ uri: photo }}
+                style={{ height: "100%", width: "100%" }}
+              />
+            </View>
+          )}
+          <TouchableOpacity
             style={{
-              ...styles.textButton,
-              color: isFormValid ? "#FFFFFF" : "#BDBDBD",
+              ...styles.cameraBtn,
+              backgroundColor: !photo ? `#FFFFFF` : `rgba(255, 255, 255, 0.3)`,
+            }}
+            onPress={takePhoto}
+          >
+            <FontAwesome
+              name="camera"
+              size={24}
+              style={{
+                color: !photo ? `#BDBDBD` : `#FFFFFF`,
+              }}
+            />
+          </TouchableOpacity>
+        </Camera>
+        {!photo ? (
+          <Text style={styles.text}>Загрузите фото</Text>
+        ) : (
+          <Text style={styles.text}>Редактировать фото</Text>
+        )}
+        <KeyboardAvoidingView
+          behavior={Platform.OS == "ios" ? "padding" : "height"}
+        >
+          <View
+            style={{
+              paddingBottom: isFocus.location || isFocus.title ? 20 : 0,
             }}
           >
-            Опубликовать
-          </Text>
-        </TouchableOpacity>
+            <TextInput
+              onFocus={() => setIsFocus({ ...isFocus, title: true })}
+              onBlur={() => setIsFocus({ ...isFocus, title: false })}
+              placeholder="Название..."
+              value={formValues.title}
+              onChangeText={(value) =>
+                setFormValues({ ...formValues, title: value })
+              }
+              style={{
+                ...styles.input,
+                borderBottomColor: isFocus.title ? `#FF6C00` : `#E8E8E8`,
+              }}
+            />
+            <View style={styles.inputMapWrapper}>
+              <Feather
+                name="map-pin"
+                size={18}
+                color="#BDBDBD"
+                style={styles.mapIcon}
+              />
+              <TextInput
+                onFocus={() => setIsFocus({ ...isFocus, location: true })}
+                onBlur={() => setIsFocus({ ...isFocus, location: false })}
+                placeholder="Местность..."
+                value={formValues.location}
+                onChangeText={(value) =>
+                  setFormValues({ ...formValues, location: value })
+                }
+                style={{
+                  ...styles.inputMap,
+                  borderBottomColor: isFocus.location ? `#FF6C00` : `#E8E8E8`,
+                }}
+              />
+            </View>
+          </View>
+          <TouchableOpacity
+            style={[styles.button, !isFormValid && styles.disabledButton]}
+            onPress={() => {
+              if (isFormValid) {
+                sendPhoto();
+              }
+            }}
+          >
+            <Text
+              style={{
+                ...styles.textButton,
+                color: isFormValid ? "#FFFFFF" : "#BDBDBD",
+              }}
+            >
+              Опубликовать
+            </Text>
+          </TouchableOpacity>
+        </KeyboardAvoidingView>
       </View>
-    </View>
+    </TouchableWithoutFeedback>
   );
 };
 export default CreatePostsScreen;
