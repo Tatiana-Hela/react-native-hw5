@@ -18,7 +18,7 @@ const DefaultScreenPosts = ({ route, navigation }) => {
     <View style={styles.container}>
       <View style={styles.wrapperUser}>
         <Image
-          source={require("../../../../assets/images/rectangle@x.jpg")}
+          source={require("../../../../assets/images/rectanglex.jpg")}
           style={styles.userPhoto}
         />
         <View style={{ flexDirection: "column" }}>

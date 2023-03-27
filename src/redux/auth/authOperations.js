@@ -15,11 +15,16 @@ export const authSignUpUser =
   async (dispatch, getState) => {
     try {
       await createUserWithEmailAndPassword(auth, email, password);
+
       const user = await auth.currentUser;
-      user.updateProfile({
+      console.log(user);
+
+      const { uid, displayName } = await auth.currentUser;
+
+      await updateProfile(user, {
         displayName: login,
       });
-      const { uid, displayName } = await auth.currentUser;
+
       dispatch(
         authSlice.actions.updateUserProfile({
           userId: uid,

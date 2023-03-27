@@ -11,9 +11,10 @@ const auth = getAuth(db);
 export default function App() {
   const [user, setUser] = useState(null);
 
+  console.log(user);
+
   onAuthStateChanged(auth, (user) => {
     setUser(user);
-    // console.log(user);
   });
 
   const routing = useRoute(user);

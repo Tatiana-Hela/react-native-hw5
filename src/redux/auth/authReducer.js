@@ -19,7 +19,4 @@ export const authSlice = createSlice({
     }),
   },
 });
-console.log(authSlice);
-console.log(auth.login);
-console.log(auth.userId);
-console.log(auth.stateChange);
+// console.log(authSlice);
