@@ -12,9 +12,12 @@ import {
   Image,
   Platform,
 } from "react-native";
+
+import { useDispatch } from "react-redux";
+import { authSignInUser } from "../../redux/auth/authOperations";
+
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
-
 SplashScreen.preventAutoHideAsync();
 
 const initialState = {
@@ -30,24 +33,25 @@ const LoginScreen = ({ navigation }) => {
     password: false,
   });
   const [fontsLoaded] = useFonts({
-    "Roboto-Regular": require("../../assets/fonts/Roboto-Regular.ttf"),
-    "Roboto-Medium": require("../../assets/fonts/Roboto-Medium.ttf"),
+    "Roboto-Regular": require("../../../assets/fonts/Roboto-Regular.ttf"),
+    "Roboto-Medium": require("../../../assets/fonts/Roboto-Medium.ttf"),
   });
   const [isSecureEntry, setIsSecureEntry] = useState(true);
+
+  const dispatch = useDispatch();
 
   const onLayoutRootView = useCallback(async () => {
     if (fontsLoaded) {
       await SplashScreen.hideAsync();
     }
   }, [fontsLoaded]);
-
   if (!fontsLoaded) {
     return null;
   }
 
-  function keyboardHide() {
+  function handleSubmit() {
     setIsShowKeyboard(false);
-    Keyboard.dismiss();
+    dispatch(authSignInUser(state));
     console.log(state);
     setState(initialState);
   }
@@ -57,7 +61,7 @@ const LoginScreen = ({ navigation }) => {
       <View style={styles.container} onLayout={onLayoutRootView}>
         <ImageBackground
           style={styles.image}
-          source={require("../../assets/images/photo-bg2x.jpg")}
+          source={require("../../../assets/images/photo-bg2x.jpg")}
         >
           <View style={styles.wrapperForm}>
             <View style={styles.form}>
@@ -133,7 +137,7 @@ const LoginScreen = ({ navigation }) => {
               </KeyboardAvoidingView>
               <TouchableOpacity
                 activeOpacity={0.8}
-                onPress={keyboardHide}
+                onPress={handleSubmit}
                 style={styles.button}
               >
                 <Text style={styles.textButton}>Войти</Text>

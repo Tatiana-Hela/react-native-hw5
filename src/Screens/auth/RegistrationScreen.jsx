@@ -13,6 +13,8 @@ import {
 } from "react-native";
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
+import { useDispatch } from "react-redux";
+import { authSignUpUser } from "../../redux/auth/authOperations";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -31,10 +33,12 @@ const RegistrationScreens = ({ navigation }) => {
     password: false,
   });
   const [fontsLoaded] = useFonts({
-    "Roboto-Regular": require("../../assets/fonts/Roboto-Regular.ttf"),
-    "Roboto-Medium": require("../../assets/fonts/Roboto-Medium.ttf"),
+    "Roboto-Regular": require("../../../assets/fonts/Roboto-Regular.ttf"),
+    "Roboto-Medium": require("../../../assets/fonts/Roboto-Medium.ttf"),
   });
   const [isSecureEntry, setIsSecureEntry] = useState(true);
+
+  const dispatch = useDispatch();
 
   const onLayoutRootView = useCallback(async () => {
     if (fontsLoaded) {
@@ -46,10 +50,10 @@ const RegistrationScreens = ({ navigation }) => {
     return null;
   }
 
-  function keyboardHide() {
+  function handleSubmit() {
     setIsShowKeyboard(false);
-    Keyboard.dismiss();
     console.log(state);
+    dispatch(authSignUpUser(state));
     setState(initialState);
   }
 
@@ -58,13 +62,13 @@ const RegistrationScreens = ({ navigation }) => {
       <View style={styles.container} onLayout={onLayoutRootView}>
         <ImageBackground
           style={styles.image}
-          source={require("../../assets/images/photo-bg2x.jpg")}
+          source={require("../../../assets/images/photo-bg2x.jpg")}
         >
           <View style={styles.wrapperForm}>
             <View style={styles.imageWrapper}>
               <Image />
               <Image
-                source={require("../../assets/add.png")}
+                source={require("../../../assets/add.png")}
                 style={styles.addIcon}
               />
             </View>
@@ -158,7 +162,7 @@ const RegistrationScreens = ({ navigation }) => {
               </KeyboardAvoidingView>
               <TouchableOpacity
                 activeOpacity={0.8}
-                onPress={keyboardHide}
+                onPress={handleSubmit}
                 style={styles.button}
               >
                 <Text style={styles.textButton}>Зарегистрироваться</Text>

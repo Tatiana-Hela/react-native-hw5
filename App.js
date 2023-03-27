@@ -1,16 +1,26 @@
-import React from "react";
-import { SafeAreaProvider } from "react-native-safe-area-context";
+import React, { useState } from "react";
 import { StyleSheet } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
-import useRoute from "./router.js";
+import { Provider } from "react-redux";
+import useRoute from "./src/router";
+import { store } from "./src/redux/store";
+import db from "./src/firebase/config";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+const auth = getAuth(db);
 
 export default function App() {
-  const routing = useRoute({});
+  const [user, setUser] = useState(null);
 
+  onAuthStateChanged(auth, (user) => {
+    setUser(user);
+    // console.log(user);
+  });
+
+  const routing = useRoute(user);
   return (
-    <SafeAreaProvider>
+    <Provider store={store}>
       <NavigationContainer>{routing}</NavigationContainer>
-    </SafeAreaProvider>
+    </Provider>
   );
 }
 

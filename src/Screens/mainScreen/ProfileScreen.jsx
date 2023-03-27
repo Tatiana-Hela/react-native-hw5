@@ -7,7 +7,7 @@ const ProfileScreen = () => {
   return (
     <ImageBackground
       style={styles.image}
-      source={require("../../assets/images/photo-bg2x.jpg")}
+      source={require("../../../assets/images/photo-bg2x.jpg")}
     >
       <View style={styles.wrapper}>
         <Feather
@@ -19,7 +19,7 @@ const ProfileScreen = () => {
         <View style={styles.imageWrapper}>
           <Image />
           <Image
-            source={require("../../assets/delete-icon.png")}
+            source={require("../../../assets/delete-icon.png")}
             style={styles.deleteIcon}
           />
         </View>
