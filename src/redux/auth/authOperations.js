@@ -14,12 +14,18 @@ export const authSignUpUser =
   ({ login, email, password }) =>
   async (dispatch, getState) => {
     try {
-      const { user } = await createUserWithEmailAndPassword(
-        auth,
-        email,
-        password
+      await createUserWithEmailAndPassword(auth, email, password);
+      const user = await auth.currentUser;
+      user.updateProfile({
+        displayName: login,
+      });
+      const { uid, displayName } = await auth.currentUser;
+      dispatch(
+        authSlice.actions.updateUserProfile({
+          userId: uid,
+          login: displayName,
+        })
       );
-      dispatch(authSlice.actions.updateUserProfile({ userId: user.uid }));
       console.log(user);
     } catch (error) {
       console.log(error.message);
