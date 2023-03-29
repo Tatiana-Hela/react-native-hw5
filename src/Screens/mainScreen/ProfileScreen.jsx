@@ -1,21 +1,39 @@
-import React from "react";
-import { View, Text, StyleSheet, ImageBackground, Image } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  ImageBackground,
+  Image,
+  TouchableOpacity,
+} from "react-native";
+import { useDispatch } from "react-redux";
+
+import { authSignOutUser } from "../../redux/auth/authOperations";
 
 import { Feather } from "@expo/vector-icons";
 
 const ProfileScreen = () => {
+  const dispatch = useDispatch();
+
+  const signOut = () => {
+    dispatch(authSignOutUser());
+  };
+
   return (
     <ImageBackground
       style={styles.image}
       source={require("../../../assets/images/photo-bg2x.jpg")}
     >
       <View style={styles.wrapper}>
-        <Feather
-          style={styles.logout}
-          name="log-out"
-          size={24}
-          color="#BDBDBD"
-        />
+        <TouchableOpacity onPress={signOut}>
+          <Feather
+            style={styles.logout}
+            name="log-out"
+            size={24}
+            color="#BDBDBD"
+          />
+        </TouchableOpacity>
+
         <View style={styles.imageWrapper}>
           <Image />
           <Image

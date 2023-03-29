@@ -7,13 +7,13 @@ import {
   Text,
   TextInput,
   Platform,
-  Button,
   Keyboard,
   TouchableWithoutFeedback,
   KeyboardAvoidingView,
 } from "react-native";
 import { Camera } from "expo-camera";
 import * as Location from "expo-location";
+
 import { FontAwesome } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
 

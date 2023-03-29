@@ -14,6 +14,7 @@ import {
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 import { useDispatch } from "react-redux";
+
 import { authSignUpUser } from "../../redux/auth/authOperations";
 
 SplashScreen.preventAutoHideAsync();

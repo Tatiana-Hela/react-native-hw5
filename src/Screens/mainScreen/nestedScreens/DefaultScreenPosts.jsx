@@ -1,7 +1,13 @@
-import React, { useEffect, useState } from "react";
-import { Button, TouchableOpacity } from "react-native";
-import { Image } from "react-native";
-import { View, StyleSheet, FlatList, Text } from "react-native";
+import { useEffect, useState } from "react";
+import {
+  View,
+  StyleSheet,
+  FlatList,
+  Text,
+  TouchableOpacity,
+  Image,
+} from "react-native";
+
 import { Feather } from "@expo/vector-icons";
 
 const DefaultScreenPosts = ({ route, navigation }) => {

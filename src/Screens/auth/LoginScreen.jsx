@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import { useState, useCallback } from "react";
 import {
   StyleSheet,
   Text,
@@ -9,7 +9,6 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   ImageBackground,
-  Image,
   Platform,
 } from "react-native";
 

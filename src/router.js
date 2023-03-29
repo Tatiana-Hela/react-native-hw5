@@ -6,7 +6,6 @@ import LoginScreen from "./Screens/auth/LoginScreen";
 import PostsScreen from "./Screens/mainScreen/PostsScreen";
 import CreatePostsScreen from "./Screens/mainScreen/CreatePostsScreen";
 import ProfileScreen from "./Screens/mainScreen/ProfileScreen";
-import Home from "./Screens/mainScreen/Home";
 
 ///icons
 import { Feather } from "@expo/vector-icons";
