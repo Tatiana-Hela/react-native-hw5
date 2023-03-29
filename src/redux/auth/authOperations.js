@@ -19,7 +19,7 @@ export const authSignUpUser =
 
       const user = await auth.currentUser;
 
-      const { uid, displayName } = await auth.currentUser;
+      const { displayName, uid } = await auth.currentUser;
 
       await updateProfile(user, {
         displayName: login,
@@ -28,7 +28,7 @@ export const authSignUpUser =
       dispatch(
         authSlice.actions.updateUserProfile({
           userId: uid,
-          login: displayName,
+          login: login,
         })
       );
     } catch (error) {
@@ -54,6 +54,8 @@ export const authSignInUser =
 
 export const authStateChangeUser = () => async (dispatch, getState) => {
   await onAuthStateChanged(auth, (user) => {
-    setUser(user);
+    if (user) {
+      dispatch(authSlice.actions.updateUserProfile(updateProfile));
+    }
   });
 };

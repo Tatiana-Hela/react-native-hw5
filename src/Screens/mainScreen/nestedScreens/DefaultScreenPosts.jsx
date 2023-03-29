@@ -13,7 +13,7 @@ const DefaultScreenPosts = ({ route, navigation }) => {
     }
   }, [route.params]);
 
-  console.log(posts);
+  // console.log(posts);
   return (
     <View style={styles.container}>
       <View style={styles.wrapperUser}>
