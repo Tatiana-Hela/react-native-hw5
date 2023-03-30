@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import {
   View,
   StyleSheet,
@@ -13,6 +13,9 @@ import {
 } from "react-native";
 import { Camera } from "expo-camera";
 import * as Location from "expo-location";
+import { db } from "../../firebase/config";
+import { getStorage, ref, uploadBytes } from "firebase/storage";
+const storage = getStorage(db);
 
 import { FontAwesome } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
@@ -38,7 +41,7 @@ const CreatePostsScreen = ({ navigation }) => {
     if (camera && isCameraReady) {
       try {
         const photo = await camera.takePictureAsync();
-        // console.log("photo", photo.uri);
+        console.log("photo", photo.uri);
         const location = await Location.getCurrentPositionAsync({});
         // console.log("latitude", location.coords.latitude);
         // console.log("longitude", location.coords.longitude);
@@ -52,6 +55,21 @@ const CreatePostsScreen = ({ navigation }) => {
     }
   };
 
+  // const uploadPhotoToServer = async (photo) => {
+  //   try {
+  //     const response = await fetch(photo);
+  //     console.log(response);
+  //     const file = await response.blob();
+  //     console.log("file", file);
+  //     const uniquePostId = Date.now.toString();
+  //     const storageRef = ref(storage, `postsImages/${uniquePostId}`);
+  //     const data = await uploadBytes(storageRef, file);
+  //     console.log("data", data);
+  //   } catch (error) {
+  //     console.log(error.message);
+  //   }
+  // };
+
   useEffect(() => {
     if (formValues.title && formValues.location && photo) {
       setIsFormValid(true);
@@ -61,7 +79,8 @@ const CreatePostsScreen = ({ navigation }) => {
   }, [formValues]);
 
   const sendPhoto = () => {
-    console.log("navigation", navigation);
+    // console.log("navigation", navigation);
+    // uploadPhotoToServer();
     navigation.navigate("DefaultScreen", {
       title: formValues.title,
       location: formValues.location,
